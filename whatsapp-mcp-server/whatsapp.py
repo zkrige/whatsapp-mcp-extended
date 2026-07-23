@@ -1323,7 +1323,7 @@ def list_all_contacts(limit: int = 100) -> list[Contact]:
             )
             contacts.append(contact)
 
-        return contacts
+        return [c.to_dict() for c in contacts]
 
     except sqlite3.Error as e:
         print(f"Database error: {e}")
