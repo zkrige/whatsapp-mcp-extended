@@ -39,7 +39,7 @@ type Config struct {
 // NewConfig creates a new configuration with default values
 func NewConfig() *Config {
 	cfg := &Config{
-		APIPort:     8080,
+		APIPort:     28765,
 		APIBindHost: "127.0.0.1",
 		// History sync defaults
 		HistorySyncDaysLimit: 365,   // 1 year default

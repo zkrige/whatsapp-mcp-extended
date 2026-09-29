@@ -30,7 +30,7 @@ type Manager struct {
 func NewManager(messageStore *database.MessageStore, logger waLog.Logger) *Manager {
 	port := os.Getenv("API_PORT")
 	if port == "" {
-		port = "8080"
+		port = "28765"
 	}
 
 	return &Manager{

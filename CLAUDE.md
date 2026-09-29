@@ -12,7 +12,7 @@ WhatsApp MCP Server - a Model Context Protocol server enabling AI integration wi
 ┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
 │   whatsapp-bridge   │     │   whatsapp-mcp      │     │    webhook-ui       │
 │   (Go + whatsmeow)  │◄────│   (Python + MCP)    │     │   (HTML/JS SPA)     │
-│   Port: 8080        │     │   Ports: 8081,8082  │     │   Port: 8089        │
+│   Port: 28765       │     │   Ports: 8081,8082  │     │   Port: 8089        │
 └─────────────────────┘     └─────────────────────┘     └─────────────────────┘
          │                           │
          ▼                           ▼
@@ -147,13 +147,13 @@ Delivery: async with exponential backoff, HMAC-SHA256 signatures
 - Group: `{id}@g.us`
 
 ## Ports
-- 8080: Bridge REST API (mapped to 8180 in docker-compose)
+- 28765: Bridge REST API (mapped to 8180 in docker-compose). Dedicated non-default port to avoid clashing with other local dev tools on 8080; see `internal/config/config.go` (`APIPort` default) and `API_PORT` env var.
 - 8081: MCP SSE server
 - 8082: Gradio UI
 - 8089: Webhook management UI
 
 ## Environment Variables
-- `BRIDGE_HOST`: Go bridge hostname (default: localhost, set to container name in docker)
+- `BRIDGE_HOST`: Go bridge hostname (default: localhost:28765, set to container name in docker)
 - `GRADIO`: Enable/disable Gradio UI (true/false)
 - `DEBUG`: Enable debug logging
 

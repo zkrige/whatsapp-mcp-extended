@@ -74,9 +74,9 @@ if not os.getenv("WA_SKIP_DB_CHECK") and not os.path.exists(MESSAGES_DB_PATH):
 
 
 # Bridge API configuration
-_bridge_host = os.getenv("BRIDGE_HOST", "localhost:8080")
+_bridge_host = os.getenv("BRIDGE_HOST", "localhost:28765")
 if ":" not in _bridge_host:
-    _bridge_host = f"{_bridge_host}:8080"
+    _bridge_host = f"{_bridge_host}:28765"
 BRIDGE_HOST = _bridge_host
 WHATSAPP_API_BASE_URL = f"http://{BRIDGE_HOST}/api"
 

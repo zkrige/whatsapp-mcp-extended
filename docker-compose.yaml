@@ -15,7 +15,7 @@ services:
       - 8.8.8.8
       - 8.8.4.4
     ports:
-      - "127.0.0.1:8180:8080"
+      - "127.0.0.1:8180:28765"
     volumes:
       - ./store:/app/whatsapp-bridge/store
     environment:
@@ -24,7 +24,7 @@ services:
       - DISABLE_AUTH_CHECK=${DISABLE_AUTH_CHECK:-false}
       - API_BIND_HOST=0.0.0.0  # Docker: accept from internal network; external port is already bound to 127.0.0.1:8180
     healthcheck:
-      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1:8080/api/health"]
+      test: ["CMD", "wget", "-qO", "/dev/null", "http://127.0.0.1:28765/api/health"]
       interval: 60s
       timeout: 10s
       retries: 3

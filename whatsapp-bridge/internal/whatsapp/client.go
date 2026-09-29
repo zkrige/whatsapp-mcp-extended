@@ -402,7 +402,7 @@ func (c *Client) SendTypingIndicator(chatJID string, state string) error {
 // SetAboutText updates the user's profile "About" status text.
 // This is the text shown in the profile, not ephemeral status broadcasts.
 func (c *Client) SetAboutText(text string) error {
-	return c.SetStatusMessage(context.Background(), text)
+	return c.SetStatusMessage(context.Background(), types.SetStatusInput{Text: &text})
 }
 
 // SetDisappearingTimer sets the disappearing messages timer for a chat.

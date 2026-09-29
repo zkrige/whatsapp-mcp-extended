@@ -372,7 +372,7 @@ Modified the `UpdateWebhookConfig` method to:
 The webhook update API now properly handles trigger updates:
 
 ```bash
-curl -X PUT "http://localhost:8080/api/webhooks/{id}" \
+curl -X PUT "http://localhost:28765/api/webhooks/{id}" \
   -H "Content-Type: application/json" \
   -d '{
     "id": 1,

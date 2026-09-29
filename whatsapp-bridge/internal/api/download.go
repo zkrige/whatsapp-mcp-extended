@@ -48,7 +48,7 @@ type downloadRequest struct {
 //   - message_id: WhatsApp message ID (required)
 //   - chat_jid:   chat JID containing the message (required)
 //
-// Response: { success: bool, path: string, size: int, message?: string }
+// Response: { success: bool, path: string (absolute), size: int, message?: string }
 func (s *Server) handleDownload(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		SendJSONError(w, "Method not allowed", http.StatusMethodNotAllowed)
@@ -187,10 +187,16 @@ func (s *Server) handleDownload(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	absPath, err := filepath.Abs(outPath)
+	if err != nil {
+		SendJSONError(w, "resolve path failed: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
 	w.Header().Set("Content-Type", "application/json")
 	_ = json.NewEncoder(w).Encode(map[string]any{
 		"success": true,
-		"path":    outPath,
+		"path":    absPath,
 		"size":    len(plain),
 	})
 }

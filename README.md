@@ -27,7 +27,7 @@ An extended Model Context Protocol (MCP) server for WhatsApp with a toolset-gate
 ┌─────────────────────┐     ┌─────────────────────┐     ┌─────────────────────┐
 │   whatsapp-bridge   │     │   whatsapp-mcp      │     │   whatsapp-web-ui   │
 │   (Go + whatsmeow)  │◄────│   (Python + MCP)    │     │   (HTML/JS SPA)     │
-│   Port: 8080        │     │   Port: 8081        │     │   Port: 8090        │
+│   Port: 28765       │     │   Port: 8081        │     │   Port: 8090        │
 └─────────────────────┘     └─────────────────────┘     └─────────────────────┘
          │                           │
          ▼                           ▼
@@ -241,7 +241,7 @@ docker-compose up -d whatsapp-bridge
 
 | Service | Port | Description |
 |---------|------|-------------|
-| Bridge API | 8080 (→8180) | REST API |
+| Bridge API | 28765 (→8180) | REST API |
 | MCP Server | 8081 | Streamable HTTP transport |
 | Web UI | 8090 | Chat, contacts, and webhook management |
 
@@ -257,7 +257,7 @@ Environment variables for the bridge (set in `.env` or `docker-compose.yaml`):
 | `HISTORY_SYNC_DAYS_LIMIT` | `365` | Days of history to sync on first link |
 | `HISTORY_SYNC_SIZE_MB` | `5000` | Max history sync size |
 | `STORAGE_QUOTA_MB` | `10240` | Device storage quota |
-| `API_PORT` | `8080` | Bridge HTTP port (internal) |
+| `API_PORT` | `28765` | Bridge HTTP port (internal) |
 
 ## Quick Commands
 
