@@ -172,7 +172,7 @@ func (c *Client) HandleMessage(messageStore *database.MessageStore, webhookManag
 	}
 
 	// Auto-download media while CDN URL is still fresh
-	if mediaType != "" && (url != "" || directPath != "") {
+	if shouldAutoDownload(msg.Info.Chat, mediaType, url, directPath) {
 		go c.autoDownloadMedia(msg.Info.ID, chatJID, mediaType, filename, url, directPath, mediaKey, fileSHA256, fileEncSHA256, fileLength)
 	}
 
@@ -336,23 +336,29 @@ func (c *Client) historyMessageSender(chat types.JID, key *waCommon.MessageKey) 
 	return chat.ToNonAD().String(), isFromMe
 }
 
+func shouldAutoDownload(chat types.JID, mediaType, url, directPath string) bool {
+	return mediaType != "" && (url != "" || directPath != "") && chat != types.StatusBroadcastJID
+}
+
+var unsafePathChars = regexp.MustCompile(`[^a-zA-Z0-9._-]`)
+
+func autoDownloadPath(chatJID, msgID, filename string) string {
+	name := msgID + ".bin"
+	if filename != "" {
+		name = msgID + "_" + filename
+	}
+	return filepath.Join("store", unsafePathChars.ReplaceAllString(chatJID, "_"), unsafePathChars.ReplaceAllString(name, "_"))
+}
+
 // autoDownloadMedia downloads and saves media to disk immediately after receiving a message,
 // before the WhatsApp CDN URL expires. Runs as a goroutine; all errors are logged and ignored.
 func (c *Client) autoDownloadMedia(msgID, chatJID, mediaType, filename, rawURL, directPath string, mediaKey, fileSHA256, fileEncSHA256 []byte, fileLength uint64) {
-	// Sanitize JID for filesystem (replace colons and other special chars)
-	sanitizedJID := regexp.MustCompile(`[^a-zA-Z0-9._-]`).ReplaceAllString(chatJID, "_")
-	outDir := filepath.Join("store", sanitizedJID)
+	outPath := autoDownloadPath(chatJID, msgID, filename)
+	outDir := filepath.Dir(outPath)
 	if err := os.MkdirAll(outDir, 0o755); err != nil {
 		c.logger.Warnf("auto-download: mkdir %s: %v", outDir, err)
 		return
 	}
-
-	if filename == "" {
-		filename = msgID + ".bin"
-	}
-	// Sanitize filename
-	safeFilename := regexp.MustCompile(`[^a-zA-Z0-9._-]`).ReplaceAllString(filename, "_")
-	outPath := filepath.Join(outDir, safeFilename)
 
 	// Skip if already downloaded
 	if info, err := os.Stat(outPath); err == nil && info.Size() > 0 {
